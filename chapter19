@@ -1,0 +1,577 @@
+Chapter 19: Managing Forms — Complete Study Guide
+Oracle Fusion Cloud EPM – Administering Financial Consolidation and Close, September 2026 · Chapter 19, pages 1–61
+
+This guide follows the complete Chapter 19 structure in your uploaded Oracle document, including topics that were missing from my earlier explanation: asymmetric rows and columns, formula rows, SingleTime, Year-to-Date input, user variables, Smart Lists, and Data Discovery.
+
+For four years of FCCS experience, the goal is to understand not only what a form does, but how to design one, configure it, validate it, and troubleshoot it.
+1. Complete Chapter 19 syllabus
+Section	Chapter pages	Topic
+1	1–3	Predefined Forms
+2	3–4	Form Components
+3	4–5	Form Design Considerations
+4	5–14	Creating Simple Forms, layout, properties, validation, Parent First functions
+5	14–31	Format Rules, formatting precedence, scenarios, best practices
+6	31–36	Precision, asymmetric grids, formulas, POV, SingleTime
+7	36–40	Opening, previewing, editing, moving, deleting, renaming forms, YTD input
+8	40–42	User Variables
+9	42–47	Smart Lists
+10	47–61	Data Discovery and Generative AI explanations
+
+2. Predefined Forms
+Oracle provides predefined forms when an FCCS application is created. Their availability depends on the features enabled.
+
+Examples include Balance Sheet, Income Statement, and Cash Flow forms.
+Form	Purpose
+FCCS_Balance Sheet by Consolidation	Review balances by consolidation status
+FCCS_Balance Sheet by Movement Detail	Review account movements
+FCCS_Balance Sheet by Period	Review balances across periods
+FCCS_Cash Flow Period by Entity	Review cash flow by entity
+FCCS_Monthly Cash Flow by Entity	Review monthly cash flow
+FCCS_Quarterly Cash Flow by Entity	Review quarterly cash flow
+
+Oracle specifies that the Service Administrator and Power User have Modify access to these forms by default. Users and Viewers can launch them but cannot modify their layouts.
+
+When Basic Balance Sheet is selected during application creation, the Balance Sheet, Cash Flow, and Income Statement form folders are excluded.
+
+Document reference: Chapter 19, pages 1–3. EPM-INFORMATION-DEVELOPMENT-TEAM-E93973-628A1C2A_copy (1).pdf
+
+3. Form Components
+A form has four principal layout areas.
+POV: Actual · FY26 · India
+
+Page Axis: Currency selection
+
+Rows / Account	Jan	Feb	Mar
+Revenue	500	550	600
+Expenses	300	320	340
+Profit	200	230	260
+
+Illustrative form layout using fictional amounts.
+Component	Function
+Rows	Display selected members vertically
+Columns	Display selected members horizontally
+POV	Identifies members used for retrieving the data
+Page Axis	Allows switching between selected page members
+
+Important design considerations
+Oracle describes several rules:
+- Access permissions determine which form data a user can view or modify.
+- In multicurrency applications, the selected Currency member determines the displayed currency.
+- Level 0 members support data entry; parent-member intersections described in the guide are read-only.
+- Shared members must be selected using supported relationship functions; entered values are stored against their base members.
+- Using relationships such as Children or Descendants can simplify form maintenance and calculations.
+Reference: Chapter 19, pages 3–5. EPM-INFORMATION-DEVELOPMENT-TEAM-E93973-628A1C2A_copy (1).pdf
+
+4. Creating a Simple Form — Complete Procedure
+Oracle's documented starting procedure is:
+1. Open Navigator → Create and Manage → Forms.
+2. Select Actions → Create Simple Form.
+3. Enter a name, up to 80 characters.
+4. Enter an optional description, up to 255 characters.
+5. Select the Cube.
+6. Optionally provide instructions.
+7. Click Next to configure the layout.
+8. Assign at least one dimension to Rows and Columns.
+9. Select the required members.
+10. Configure the remaining dimensions in POV or Page Axis.
+11. Configure grid, dimension, display, printing, and other options.
+12. Add formula or validation rules where required.
+13. Validate and save the form.
+Initially, all dimensions appear in POV. Administrators move dimensions to the other axes as needed.
+
+Reference: Chapter 19, pages 5–7. EPM-INFORMATION-DEVELOPMENT-TEAM-E93973-628A1C2A_copy (1).pdf
+
+5. Form Grid Properties
+These settings determine how the form grid displays information.
+Setting	Behavior
+Suppress Missing Data	Hides rows or columns without data
+Suppress Missing Blocks	Can improve performance when many missing blocks are suppressed
+Suppress Invalid Data	Hides invalid intersections
+Hide	Hides a selected row or column
+Read-only	Prevents editing in the selected row or column
+Show Separator	Displays a visual separator
+Row Height	Controls row display size
+Column Width	Controls column display size
+
+Important performance detail: Oracle warns that Suppress Missing Blocks can degrade performance when few or no rows are suppressed. Test the setting rather than enabling it automatically.
+
+Reference: Chapter 19, pages 7–9. EPM-INFORMATION-DEVELOPMENT-TEAM-E93973-628A1C2A_copy (1).pdf
+
+6. Dimension, Display, and Printing Properties
+Chapter 19 separately describes dimension properties, display properties, and printing options.
+
+Dimension Properties control how selected dimensions and members behave in the form. These include supported member display and selection settings.
+
+Display Properties control how the form presents information, including missing-value presentation and grid display behavior.
+
+Printing Options determine supported formatting when forms are printed.
+
+When designing a form, these settings should be reviewed after defining the rows, columns, POV, and Page Axis.
+
+Reference: Chapter 19, pages 9–11.
+7. Form Validation Rules
+Definition: Form Validation Rules allow administrators to define conditions that are evaluated against form data.
+
+Oracle describes creating validation rules within the Form Designer.
+Procedure
+1. Open Navigator → Forms.
+2. Create or edit a form.
+3. Open Layout.
+4. Select the grid, row, column, or cell to validate.
+5. Open the Format/Validation Rule Builder.
+6. Define the required condition and supported action.
+7. Validate the rule.
+8. Save the form.
+9. Preview the form to check the result.
+Important validation options
+Oracle documents options such as:
+Option	Purpose
+Validate only for users with access to the form	Restricts validation during approval-unit validation
+Validate only for pages with existing blocks	Avoids unnecessary validation of certain page combinations
+Validate only for cells and pages the user has access to	Applies the current user's security during validation
+Validate with each possible user-variable value	Repeats validation for the relevant user-variable values
+Validate with current approval-unit members	Uses the current approval-unit member during validation
+
+Reference: Chapter 19, pages 11–13. EPM-INFORMATION-DEVELOPMENT-TEAM-E93973-628A1C2A_copy (1).pdf
+
+8. Parent First Functions
+Oracle documents three Parent First functions.
+Function	Purpose
+DescendantsPF	Displays descendants with parents before children
+IDescendantsPF	Includes the selected member and descendants in parent-first order
+IChildrenPF	Includes the selected member and immediate children in parent-first order
+
+Oracle specifies that these functions must be typed directly on the Layout tab. They are not available as selections in the Member Selector.
+
+Practical use: When designing a hierarchical financial report, parent-first ordering makes it easier to see the parent account before its child accounts.
+
+Reference: Chapter 19, pages 13–14.
+9. Format Rules and Design Time Formatting
+Definition: Format Rules define the appearance of cells in a form using supported formatting conditions.
+
+Oracle allows format rules at several levels:
+- Entire grid
+- Row
+- Row metadata cell
+- Column
+- Column metadata cell
+- Individual data cell
+Procedure
+1. Navigate to Navigator → Forms.
+2. Create or edit the form.
+3. Open Layout.
+4. Right-click the required row, column, or cell.
+5. Select Add/Edit Format/Validation Rules.
+6. Configure the rule in the builder.
+7. Save the rule.
+8. Preview the form.
+Oracle identifies areas containing defined rules with a green background in the designer.
+Format rule precedence
+Chapter 19 includes examples demonstrating the following precedence in Smart View:
+Priority	Formatting source
+P1 – Highest	Groovy Rule
+P2	Data Validation Rule
+P3	Smart View Cell Styles
+P4	Format Rule
+P5 – Lowest	Smart View Custom Formatting
+
+When two rules affect the same cell, higher-priority formatting takes precedence for conflicting attributes. Nonconflicting formatting can still be combined.
+
+For example, Oracle illustrates Groovy rules controlling a cell's background while other formatting from a validation rule is retained.
+
+Reference: Chapter 19, pages 14–30. EPM-INFORMATION-DEVELOPMENT-TEAM-E93973-628A1C2A_copy (1).pdf
+
+10. Best Practices for Forms with Validation Rules
+Oracle provides specific performance recommendations.
+Recommendation	Reason
+Dense dimensions on rows and columns	Improve retrieval and validation efficiency
+Sparse dimensions on Page Axis and POV	Reduce unnecessary grid complexity
+Limit dimensions per row	Avoid excessive calculation work
+Use Suppress Missing Blocks when appropriate	Improve performance for sparse rows
+Reduce Run on Save rules	Limit work triggered by form saves
+Prefer member formulas where appropriate	Avoid unnecessary formula columns
+Limit forms to approximately 100 rows	Reduce form complexity
+Use member functions	Reduce maintenance
+Use user and substitution variables	Avoid creating excessive forms
+Organize forms into folders	Improve management
+
+These are recommendations, not universal requirements. Oracle advises testing performance-sensitive settings.
+
+Reference: Chapter 19, page 31. EPM-INFORMATION-DEVELOPMENT-TEAM-E93973-628A1C2A_copy (1).pdf
+
+11. Form Precision and Other Options
+Form precision determines how many decimal places appear in a cell.
+
+Oracle distinguishes minimum and maximum precision.
+Stored value	Precision configuration	Display
+100	Minimum 3	100.000
+100.12345	Maximum 3	100.123
+100.12345	Maximum 0	100
+100	Minimum 2	100.00
+
+These are examples from Oracle's precision table.
+
+Important: Precision changes how values are displayed, not the underlying stored values.
+Procedure
+1. Open the form.
+2. Select Other Options.
+3. Configure precision for Currency, Non-Currency, and Percentage values.
+4. Optionally select Use Currency Member Precision Setting.
+5. Associate Context Menus, if required.
+6. Select Enable Dynamic User Variables where needed.
+7. Click Save.
+Reference: Chapter 19, pages 31–32.
+12. Asymmetric Rows and Columns
+Definition: Asymmetric rows or columns contain different member selections from the same dimensions.
+
+Oracle gives this example:
+Segment	Scenario	Period
+A	Actual	Q1
+B	Budget	Q2, Q3, Q4
+
+Procedure
+1. Open the form and select Layout.
+2. Use Dimension Selector to choose the dimension.
+3. Open Member Selector.
+4. Configure different member selections for the relevant row or column segments.
+5. Click Save or Finish.
+Why it matters: You can design comparison forms where different segments display different scenarios or periods.
+
+Reference: Chapter 19, page 32.
+13. Adding Formula Rows and Columns
+Definition: Formula rows and columns perform calculations within the form layout.
+
+Oracle describes a formula column that calculates a percentage variance between January and February Sales.
+Illustrative example
+Account	January	February	Change %
+Revenue	100,000	120,000	20%
+Expenses	60,000	66,000	10%
+
+For this illustration:
+\[
+\text{Change \%}=\frac{\text{February}-\text{January}}{\text{January}}\times100
+\]
+
+This arithmetic example illustrates the purpose of a formula column; it is not a literal FCCS formula syntax example.
+Procedure from Oracle
+1. Open the form and select Layout.
+2. Right-click Rows or Columns.
+3. Select Add Formula Row or Add Formula Column.
+4. Enter the Formula Label.
+5. Configure Segment Properties.
+6. Select the Formula Data Type.
+7. Open the formula editor.
+8. Define the formula.
+9. Click Validate.
+10. Click OK and save the form.
+Supported result types include Currency, Non-Currency, Percentage, Smart List, Date, and Text.
+
+Reference: Chapter 19, page 33.
+14. Defining Page Axis and POV
+Oracle describes configuring both areas through the Layout tab.
+Procedure
+1. Open the form and select Layout.
+2. Drag the required dimension to Page.
+3. Select its members.
+4. Repeat for additional Page dimensions.
+5. Configure the Page dimension properties.
+6. Move the required dimensions to POV.
+7. Select POV members.
+8. Save or Finish.
+Key distinction: POV identifies a particular data intersection, while the Page Axis lets users switch among configured member selections.
+
+Reference: Chapter 19, page 34.
+15. SingleTime Dimension
+This is an important feature in Dense/Sparse Optimized applications.
+
+Definition: SingleTime is a replacement dimension that combines Year and Period selections for use in forms.
+
+For example, the Year and Period members can be represented together as Jul2022.
+
+Oracle specifies that SingleTime is available in forms and forms accessed through Smart View. It does not replace how Year and Period data is stored.
+Two important functions
+Function	Purpose
+Relative	Displays a period at an offset from a selected period
+RelativeRange	Displays a range of periods relative to a selected period
+
+Oracle provides these examples:
+- Relative(Mar 2022, 5) displays August 2022.
+- RelativeRange(Jan 2020, 2) displays January, February, and March 2020.
+Configuration
+1. Enable Combine Year and Period as a Single Dimension during application creation or through Enable Features.
+2. Create a data form.
+3. Select SingleTime under Replacement Dimensions.
+4. Configure Year and Period on the same row or column axis.
+5. Use the supported Relative or RelativeRange functions.
+6. Save and test the form.
+Oracle specifies that Year and Period must be on the same axis, without individual selections, for SingleTime functionality.
+
+Reference: Chapter 19, pages 34–36.
+16. Working with Forms and Form Components
+Chapter 19 covers opening, previewing, printing, editing, moving, deleting, and renaming forms.
+Opening a form
+Users can navigate to Data, expand the relevant folder, and open the form for which they have access.
+Previewing a form
+1. Open Navigator → Forms.
+2. Open the required form in the designer.
+3. Click Preview.
+4. Review the form in the new tab.
+5. Resolve any design-validation issues.
+6. Save the form.
+Printing a form definition
+Oracle allows Service Administrators to create form definition reports.
+1. Open Navigator → Monitor and Explore → System Reports.
+2. Select Forms.
+3. Move the required forms into Selected Forms.
+4. Optionally include member selections and business rules.
+5. Click Create Report.
+The resulting report can include cube, description, rows, columns, POV, Page Axis, access permissions, and associated business rules.
+Editing, moving, deleting, and renaming
+Operation	Documented method
+Edit	Select a form → Edit
+Create a variant	Edit → Save As
+Move	Select a form → Move
+Delete	Select a form → Delete
+Rename	Select a form → Rename
+
+Oracle states that multiple forms can be moved together when they belong to the same folder.
+
+Reference: Chapter 19, pages 36–39.
+17. Enabling Year-to-Date Data Input
+Definition: YTD Data Input allows eligible users to enter Year-to-Date data directly through the FCCS_YTD member in a form.
+
+Oracle describes this functionality for Dense/Sparse Optimized (DSO) applications.
+Procedure
+1. Create or open the required form.
+2. Select Actions → Edit.
+3. Open Layout.
+4. Ensure View is on POV or Page, not Rows or Columns.
+5. Under Grid Properties → Other, enable YTD Data Input.
+6. Save the form.
+7. Reopen it and test eligible YTD intersections.
+Oracle explains that the PostFormSave business rule supports this process.
+
+The job is triggered on form save, but its YTD processing occurs only when the feature is enabled and YTD data is entered.
+Security considerations
+The guide describes special YTD security behavior involving FCCS_YTD and FCCS_YTD_Input.
+
+It also specifies application-setting requirements for eligible User-role data entry.
+
+Important: YTD input is not simply changing the displayed View member. It involves a specific input feature, processing rule, and security behavior.
+
+Reference: Chapter 19, pages 39–40.
+18. Working with User Variables
+Definition: User Variables act as filters that allow individual users to focus on selected dimension members in forms.
+
+Oracle gives a Division variable for the Entity dimension as an example.
+Example
+A form uses a user variable named Division.
+User	Selected Division
+User A	India
+User B	USA
+User C	UK
+
+The form can use each user's selected member rather than requiring a separate form for every division.
+
+This table is an illustrative use case.
+Creating a User Variable
+1. Open Navigator.
+2. Under Create and Manage, select Variables.
+3. Open the User Variables tab.
+4. Click Actions → Add.
+5. Select Dimension Name.
+6. Enter User Variable Name.
+7. Optionally select Use Context.
+8. Click OK.
+9. Associate the variable with a form.
+Important restriction
+If a required user variable has no selected member, Oracle prevents the form from opening or appearing in a dashboard.
+
+The user receives a prompt to select the missing member.
+Deleting a User Variable
+Navigate to Variables → User Variables, select the variable, and use Actions → Delete.
+
+Reference: Chapter 19, pages 40–42.
+19. Working with Smart Lists
+Definition: Smart Lists allow administrators to create custom dropdown lists that users select from cells in forms.
+
+Instead of typing a value, users select one of the configured entries.
+Practical example
+A fictional finance form contains a review-status field.
+Illustrative Smart List
+Review Status
+Pending
+
+
+Selected value: Pending. This is an interactive illustration, not a connected FCCS application.
+
+Creating a Smart List
+1. Open Navigator → Create and Manage → Smart List.
+2. Click Create.
+3. Enter a unique Smart List name.
+4. Click OK.
+5. Open the Smart List and configure Properties.
+6. Select Entries.
+7. Add the dropdown items.
+8. Save and preview.
+Smart List entry properties
+Property	Purpose
+ID	Unique numeric identifier
+Name	Internal entry name
+Label	Text displayed to users
+
+Oracle also describes automatically generating IDs.
+Important Smart List topics
+- Smart List properties and access requirements.
+- Mapping Smart Lists to dimension members.
+- Synchronizing Smart Lists with reporting applications.
+- Adding, editing, and deleting entries.
+- Previewing Smart Lists.
+- Displaying #MISSING or a custom label.
+Smart List access levels
+Oracle documents None, Display, Read, and Write as Minimum Access Required options for controlling which member-related entries are visible.
+Smart List and #MISSING
+Oracle allows administrators to display missing Smart List values as blank, #MISSING, or a configured label such as No Change.
+
+Important: Deleting a Smart List also removes associated mappings with dimension members and reporting applications.
+
+Reference: Chapter 19, pages 42–47.
+20. Working with Data Discovery
+This is a major topic in the final part of Chapter 19.
+
+Definition: Data Discovery helps administrators understand FCCS calculation data flow, investigate financial values, and review diagnostic information.
+
+Oracle explains that Data Discovery generates information for a selected cell, including metadata, diagnostic observations, and supporting grids.
+What does Data Discovery provide?
+Output	Purpose
+Reference Grids	Display relevant data intersections
+Data Discovery Notes	Explain observations and relevant metadata
+Calculation Trace	Provides calculation execution details
+Simplified Calculation Trace	Presents traces using FCCS consolidation templates
+Generative AI Dashboard	Summarizes supported output in HTML
+Grid Colors	Highlight important cells and diagnostic observations
+
+Configuring Data Discovery
+1. Open Navigator → Tools → Data Discovery.
+2. Click Settings.
+3. Select the required analysis options.
+4. Click Save.
+Oracle documents options including:
+- Enable Calculation Trace.
+- Compare only integer values in out-of-balance drill-through.
+- Exclude Custom dimensions in drill-through.
+- Find lowest-level Consolidation member.
+- Find lowest-level Entity member.
+The Data Discovery rules are read-only and cannot be customized.
+Adding Data Discovery to a Form
+1. Open the form in the designer.
+2. Select Other Options.
+3. Under Context Menus, move Data Discovery from Available Menus to Selected Menus.
+4. Save the form.
+5. Open the form.
+6. Right-click the required data cell.
+7. Select Data Discovery.
+Oracle also supports running Data Discovery through Smart View, starting with Smart View Client version 22.100.
+
+Reference: Chapter 19, pages 47–49.
+21. Understanding Data Discovery Output
+Oracle stores generated grids under the Data Discovery Grids folder.
+
+Each form has its own subfolder. Earlier results are moved to a Previous Runs folder.
+
+Data Discovery Notes can contain:
+- Observations about selected financial data.
+- Metadata information for Account, Movement, and Entity.
+- Information about configurable consolidation rules.
+- Information about translation override rules.
+Calculation Trace
+Oracle explains that calculation tracing is available for an eligible non-dynamic, updatable cell.
+
+When tracing is enabled, running Data Discovery triggers a single-entity consolidation.
+
+Two text attachments can be generated:
+- Calculation Trace
+- Simplified Calculation Trace
+Because calculation tracing can initiate consolidation processing, it should be used carefully in an authorized environment.
+
+Reference: Chapter 19, pages 49–56.
+22. Data Discovery with Generative AI
+Oracle describes an optional Generative AI feature that summarizes Data Discovery Notes and calculation traces.
+Procedure
+1. Open Application → Settings.
+2. Under Enable AI, select Generative AI.
+3. Save the setting.
+4. Open Navigator → Tools → Data Discovery.
+5. Configure the required settings.
+6. Open a form with the Data Discovery context menu.
+7. Right-click a data cell and select Data Discovery.
+Output comparison
+Generative AI enabled	Generative AI disabled
+Data Discovery Dashboard.html	Data Discovery Note.txt
+Interactive presentation of applicable calculation traces	Separate calculation trace text files when applicable
+Consolidated diagnostic information	Individual diagnostic attachments
+
+Oracle's figures on Chapter 19, pages 57–58 illustrate the Data Discovery Dashboard and an interactive calculation path.
+
+Reference: Chapter 19, pages 57–58.
+23. Data Discovery Grid Colors
+Oracle uses colors to help identify important cells and observations.
+Data Discovery color meanings
+
+Red: Root cell selected for Data Discovery
+
+
+
+Green: Key members, including relevant S_<Entity> members
+
+
+
+Orange: Cells associated with diagnostic observations
+
+
+
+Oracle provides examples involving prior-period out-of-balance conditions and inconsistent exchange rates.
+
+The screenshots on pages 59–61 show how highlighted cells help administrators locate relevant information.
+
+Reference: Chapter 19, pages 58–61.
+
+24. End-to-End Practical Exercise
+Fictional training project based on the documented Chapter 19 procedures. This has not been executed in an FCCS environment.
+
+Company: ABC Global
+
+Objective: Create a monthly financial entry form, configure it for users, and investigate data issues.
+Step	Activity	Expected result
+1	Create Monthly_Financial_Entry	New form definition
+2	Select Consol cube	Form linked to Consol
+3	Put Account on Rows	Revenue and Expenses displayed vertically
+4	Put Period on Columns	Jan, Feb, Mar displayed horizontally
+5	Configure Scenario, Entity, Year, and remaining POV members	Defined financial data intersections
+6	Configure Suppress Missing Data	Missing rows or columns hidden where applicable
+7	Add a formula column	Calculated values displayed
+8	Configure a validation rule	Supported conditions evaluated
+9	Associate a User Variable	Users can select their own Entity member
+10	Preview the form	Layout and validation checked
+11	Configure Data Discovery context menu	Data Discovery available on eligible cells
+12	Test using dummy data	Form behavior verified
+
+Use a non-production environment with dummy financial data for this exercise.
+25. Scenario-Based Interview Questions for 4 YOE
+Question 1A user cannot open a form because a User Variable has no value. What should you do?
+Question 2A form displays #MISSING values for many accounts. How can you improve readability?
+Question 3A form must show Actual Q1 and Budget Q2–Q4 in different segments. Which feature is appropriate?
+Question 4A customer wants to calculate percentage variance between two periods directly in a form. Which feature can be used?
+Question 5A user sees 100.000 instead of 100. Is the underlying stored value changed?
+Question 6A consultant wants to show six months across two financial years. Which feature is relevant in a DSO application?
+Question 7A user wants a dropdown selection instead of typing text in a form cell. What should be configured?
+Question 8A form fails to open because its user variable is undefined. Can the user bypass the requirement?
+Question 9An administrator needs to investigate why a consolidated value is unexpected. Which feature helps?
+Question 10A Data Discovery calculation trace is requested on a dynamic cell. Is that supported?
+Question 11A user wants to enter YTD data directly in FCCS_YTD. What must be checked?
+Question 12A Smart List entry is missing for a user. What should you investigate?
+Question 13An administrator wants to create a variant of an existing form. Which action should be used?
+Question 14A form displays unexpected formatting after a Groovy rule runs. What should be checked?
+Question 15A Data Discovery grid highlights cells in orange. What does that indicate?
+26. Final Chapter 19 Revision Checklist
+Chapter 19 study progress
