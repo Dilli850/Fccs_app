@@ -1,0 +1,980 @@
+chapter 14
+Chapter 14: Working with Dimensions in Oracle FCCS
+Source: Oracle Fusion Cloud EPM – Administering Financial Consolidation and Close (September 2026) | Chapter 14, 94 pages
+
+Chapter 14 is one of the most important chapters for understanding FCCS application configuration. It explains the dimensions, hierarchies, member properties, accounts, entities, currencies, scenarios, and metadata used in consolidation.
+
+For a four-year-experience FCCS interview, I recommend studying this chapter in detail.
+1. What is a Dimension in FCCS?
+
+A dimension organizes financial information into a particular category. 
+Each dimension contains members arranged in hierarchies.
+
+According to Oracle, FCCS provides predefined dimensions to support consolidation, translation, eliminations, and adjustments.
+
+
+
+Oracle explains that the system creates only the dimensions required for the features enabled in the application.
+
+Important: Default dimension properties cannot be changed because they are used in seeded calculations. EPM-INFORMATION-DEVELOPMENT-TEAM-E93973-628A1C2A_copy (1)(1).pdf
+
+2. Main FCCS Dimensions
+
+Dimension	Purpose
+
+Account	Stores financial accounts and their accounting properties
+Entity	Represents organizational entities and their hierarchies
+Period	Represents financial periods such as months and quarters
+Year	Represents application years
+Scenario	Identifies different sets of financial data
+View	Provides different views of financial data
+Currency	Supports currency-related processing when multicurrency is enabled
+Consolidation	Identifies stages of the consolidation process
+Data Source	Identifies the source or origin of data
+Movement	Tracks movements in financial balances
+Intercompany	Supports intercompany-related data when enabled
+Multi-GAAP	Supports reporting under multiple accounting standards when enabled
+Custom Dimensions	Provide additional business-specific analysis
+
+Oracle specifies that Currency, Intercompany, and Multi-GAAP depend on the corresponding application features being selected.
+
+Reference: Chapter 14, pages 1–2. EPM-INFORMATION-DEVELOPMENT-TEAM-E93973-628A1C2A_copy (1)(1).pdf
+
+3. Account Dimension
+
+Definition: The Account dimension represents a hierarchy of natural accounts.
+
+Accounts store financial information for entities and scenarios. 
+Each account has an account type that defines its accounting behavior.
+
+Oracle describes properties such as:
+- Account Type
+- Time Balance
+- Aggregation
+- Data Type
+- Exchange Rate Type
+- Intercompany Partner
+- Decimal display settings
+Account Types
+Account type	Purpose
+Revenue	Represents revenue accounts
+Expense	Represents expense accounts
+Asset	Represents asset accounts
+Liability	Represents liability accounts
+Equity	Represents equity accounts
+Saved Assumption	Supports values used for assumptions
+
+Account properties influence how FCCS handles financial data.
+
+Oracle also explains that Account is generally a dense dimension in traditional configurations, while Dense/Sparse Optimized applications can use Account as sparse.
+
+Reference: Chapter 14, pages 2 and 32–44. EPM-INFORMATION-DEVELOPMENT-TEAM-E93973-628A1C2A_copy (1)(1).pdf
+
+4. Entity Dimension
+Definition: The Entity dimension represents the organizational structure of a company.
+
+Entities can be organized into parent-child hierarchies.
+Parent Entity
+
+Subsidiary A
+
+Subsidiary B
+
+
+Conceptual parent-child hierarchy, included to illustrate the dimension structure.
+
+Oracle describes important Entity properties including:
+
+- Intercompany Property
+- Base Currency
+- Parent-child relationships
+- Alternate Entity Hierarchies
+Alternate Entity Hierarchies allow a single entity to appear under multiple parents for supported consolidation and currency scenarios.
+
+Reference: Chapter 14, pages 44–48. EPM-INFORMATION-DEVELOPMENT-TEAM-E93973-628A1C2A_copy (1)(1).pdf
+
+5. Period Dimension
+The Period dimension represents financial time periods.
+
+Oracle supports:
+Calendar option	Description
+12 months	Monthly periods, with January as the default fiscal-year starting month
+13 periods	Periods labeled P1, P2, P3, and so on
+Quarterly periods	Created for both calendar options
+Half-yearly periods	Can be enabled during application creation
+
+Important restrictions:
+- You cannot create custom Period dimension members.
+- The only editable Period member property is Member Alias.
+- The Period dimension includes BegBalance.
+Oracle explains that opening balances are calculated using the previous period's closing balances, including the previous year's last period for the first period of a year.
+
+Reference: Chapter 14, page 3. EPM-INFORMATION-DEVELOPMENT-TEAM-E93973-628A1C2A_copy (1)(1).pdf
+
+6. Data Source Dimension
+
+Definition: The Data Source dimension provides an audit trail showing where financial data originated.
+
+Oracle explains that it distinguishes manual data entry, data integration, supplemental data, journals, and elimination entries.
+
+Important seeded members
+
+Member	Purpose
+
+FCCS_Total Data Source	Parent for the main data source hierarchy
+FCCS_Data Input	Manual entry and ASCII data loads
+FCCS_Managed Data	Data Integration loads
+FCCS_Other Data	Loads from other integration tools
+FCCS_Supplemental Data	Posted supplemental data
+FCCS_Journal Input	Journal entries
+FCCS_Intercompany Eliminations	System-generated intercompany eliminations
+
+Some members are created only when the corresponding application feature is enabled.
+
+Reference: Chapter 14, pages 3–6. EPM-INFORMATION-DEVELOPMENT-TEAM-E93973-628A1C2A_copy (1)(1).pdf
+
+7. Consolidation Dimension
+
+Definition: The Consolidation dimension provides an audit trail of the stages of the consolidation process.
+
+It shows how data moves through consolidation from Entity Input toward Contribution.
+Important members
+Member	Purpose
+Entity Input	Input data and non-consolidation business logic
+Entity Consolidation	Aggregated contributions from child entities
+Entity Proportion Adjustment	Adjustments to proportions when required
+Entity Elimination Adjustment	Adjustments to eliminations when required
+
+Oracle explains that some of these members apply only to parent entities.
+
+Reference: Chapter 14, pages 6–9. EPM-INFORMATION-DEVELOPMENT-TEAM-E93973-628A1C2A_copy (1)(1).pdf
+
+8. Other Important Dimensions
+
+Dimension	What to understand
+Currency	Entity, parent, and reporting currency processing
+Intercompany	Tracking intercompany partners and transactions
+Movement	Changes between opening and closing balances
+Scenario	Different financial data scenarios
+Year	Application year structure
+View	Periodic, YTD, QTD, and other enabled views
+Multi-GAAP	Financial information under multiple accounting standards
+
+These dimensions are explained in the Dimensions Overview section of Chapter 14, pages 9–14.
+
+9. Dense and Sparse Dimensions
+
+Oracle explains how Period and Movement can be converted to dense dimensions in applicable application configurations.
+Dense dimensions
+Dense dimensions are used where combinations of members are expected to contain data frequently.
+Sparse dimensions
+Sparse dimensions are used where many possible combinations of members may not contain data.
+
+Chapter 14 covers converting Period and Movement dimensions to dense dimensions, including configuration restrictions and effects.
+
+Important: These changes affect the application database structure and should not be treated as ordinary member edits.
+10. Working with Dimension Hierarchies
+
+A dimension hierarchy defines relationships between parent and child members.
+
+Oracle provides functions for:
+- Expanding and collapsing hierarchies.
+- Finding dimensions and members.
+- Sorting members.
+- Moving members within hierarchies.
+- Viewing a member's ancestors.
+- Showing member usage.
+Procedure to move a member
+1. Open Navigator.
+2. Under Create and Manage, select Dimensions.
+3. Select the required dimension.
+4. Select the member or branch.
+5. Click Cut.
+6. Select the destination parent.
+7. Click Paste.
+8. Confirm the change.
+9. Update and validate affected business rules and reports.
+Oracle states that root dimension members cannot be cut.
+
+Reference: Chapter 14, pages 19–22. EPM-INFORMATION-DEVELOPMENT-TEAM-E93973-628A1C2A_copy (1)(1).pdf
+
+11. Custom Dimensions
+
+Definition: Custom dimensions provide additional analysis of financial accounts beyond the system-defined dimensions.
+
+Oracle states that Custom dimensions are associated with the Account dimension.
+Documented limits
+Application configuration	Maximum Custom dimensions
+Without Multi-GAAP	4
+With Multi-GAAP	3
+
+Oracle instructs administrators to position Custom dimensions after Intercompany and before Movement.
+
+Reference: Chapter 14, pages 22–23. EPM-INFORMATION-DEVELOPMENT-TEAM-E93973-628A1C2A_copy (1)(1).pdf
+
+12. Seeded Dimension Members
+
+Definition: Seeded members are predefined members automatically created by FCCS.
+
+Oracle uses the FCCS_ prefix for many seeded members.
+
+Examples include:
+- FCCS_IncomeStatement
+- FCCS_TotalAssets
+- FCCS_Data Input
+- FCCS_OpeningBalance
+Oracle provides important restrictions:
+- Seeded members cannot be deleted or renamed.
+- Protected seeded properties and built-in formulas cannot be changed.
+- Certain properties, such as aliases, Account Type, and Exchange Rate Type, can be modified where Oracle permits.
+Reference: Chapter 14, pages 50–62. EPM-INFORMATION-DEVELOPMENT-TEAM-E93973-628A1C2A_copy (1)(1).pdf
+
+13. Working with Members
+
+Chapter 14 describes how administrators manage dimension members.
+Operation	Purpose
+Add Member	Create a new member
+Edit Member	Modify supported properties
+Delete Member	Remove an eligible member
+Shared Member	Represent a member in another hierarchy
+Assign Access	Configure member-level permissions
+Member Formula	Define a calculation associated with a member
+
+Procedure to edit a member
+1. Open Navigator → Create and Manage → Dimensions.
+2. Select the required dimension.
+3. Select the member.
+4. Click Edit.
+5. Modify the permitted properties.
+6. Save the changes.
+Oracle's restrictions on seeded members still apply.
+14. Attributes and User-Defined Attributes (UDAs)
+Oracle describes both attributes and UDAs.
+
+Attributes provide additional descriptive information associated with dimension members.
+
+UDAs allow administrators to associate user-defined labels with members.
+
+The document provides an example of a UDA named New Products, which can be used in a form to select all members assigned that UDA.
+Procedure to create a UDA
+1. Navigate to the UDA tab in Dimensions.
+2. Click Create.
+3. Enter a name.
+4. Click Save.
+5. Assign the UDA to the relevant dimension members.
+Important: If a UDA is deleted, Oracle instructs administrators to update formulas, calculation scripts, and reports that reference it.
+
+Reference: Chapter 14, pages 84–86. EPM-INFORMATION-DEVELOPMENT-TEAM-E93973-628A1C2A_copy (1)(1).pdf
+
+
+
+
+
+15. Member Formulas
+
+Definition: Member formulas perform calculations using operators, functions, member names, numeric constants, and supported expressions.
+Procedure
+1. Open Navigator → Create and Manage → Dimensions.
+2. Select the required dimension.
+3. Select a member.
+4. Click Edit.
+5. Open the Member Formula tab.
+6. Enter the supported formula.
+7. Save the changes.
+Oracle also describes predefined formula expressions that expand during database refresh.
+
+Reference: Chapter 14, pages 86–88.
+
+
+
+
+
+
+
+Chapter 15: Editing Dimensions in the Simplified Dimension Editor
+
+Source: Oracle Fusion Cloud EPM – Administering Financial Consolidation and Close (September 2026) | Chapter 15, 22 pages
+
+Chapter 15 explains how administrators can view, edit, validate, and maintain dimensions and dimension members using the Simplified Dimension Editor.
+
+This chapter builds directly on Chapter 14, Working with Dimensions.
+
+For a four-year-experience FCCS technical interview, focus on editing member properties, managing hierarchies, formulas, shared members, and safely applying metadata changes.
+1. What is the Simplified Dimension Editor?
+
+According to Oracle, the Simplified Dimension Editor displays dimensions and members in a grid format.
+
+Instead of opening each member separately, administrators can view and edit multiple member properties on one page.
+
+Main features
+- Edit dimension and member properties directly in a grid.
+- Search and filter members.
+- Expand and collapse hierarchies.
+- Reorder and freeze columns.
+- Sort members.
+- Move members to different hierarchies.
+- Edit and validate member formulas.
+- Identify invalid properties.
+Oracle states that invalid member properties are highlighted with a red border.
+
+
+
+
+
+
+Reference: Chapter 15, page 1. EPM-INFORMATION-DEVELOPMENT-TEAM-E93973-628A1C2A_copy (1)(1).pdf
+
+2. Simplified Dimension Editor vs. Classic Dimension Editor
+
+Classic Dimension Editor	Simplified Dimension Editor
+Traditional dimension management interface	Grid-based dimension management interface
+Member properties are edited using member editing screens	Multiple properties can be edited directly in a grid
+Supports dimension hierarchy maintenance	Supports hierarchy maintenance with grid operations
+Traditional member navigation	Search, filter, freeze, and column-selection features
+
+Both interfaces support dimension management, subject to the user's security role.
+
+3. How to Access the Simplified Dimension Editor
+
+Oracle provides the following navigation:
+1. Log in to FCCS with the required administrative permissions.
+2. From the Home page, click Application.
+3. Select Overview.
+4. Open the Dimensions tab.
+5. Select the required dimension.
+6. Click Edit Member Properties.
+The editor opens the member properties in a grid.
+
+Reference: Chapter 15, pages 2 and 11. EPM-INFORMATION-DEVELOPMENT-TEAM-E93973-628A1C2A_copy (1)(1).pdf
+
+4. Main Grid Operations
+
+Oracle describes several operations available in the grid.
+Operation	Purpose
+Zoom In	Expands selected members to show descendants
+Zoom Out	Collapses hierarchy levels
+Keep Selected	Retains selected members in the grid view
+Remove Selected	Removes selected members from the current grid view
+Freeze	Keeps selected columns visible while scrolling
+Search	Finds members by name or alias
+Filtered Search	Displays members matching a search term
+Sort	Sorts children or descendants
+Column Selector	Controls which member properties appear
+
+Important: Removing selected members from the current grid view is different from deleting members from the application.
+
+5. Searching for Members
+
+Procedure
+1. Open Edit Member Properties.
+2. Under Search, select Name, Alias, or Both.
+3. Enter the member name, alias, or part of the text.
+4. Choose Search Up, Search Down, or Filtered Search.
+5. Use Clear Filter to restore the full grid.
+Search options
+Option	Behavior
+Search Up	Searches upward
+Search Down	Searches downward
+Filtered Search	Displays all matching members
+Clear Filter	Removes the filter
+
+Reference: Chapter 15, pages 6–7. EPM-INFORMATION-DEVELOPMENT-TEAM-E93973-628A1C2A_copy (1)(1).pdf
+
+6. Sorting Dimension Members
+Oracle supports sorting members in ascending or descending order.
+Procedure
+1. Open Edit Member Properties.
+2. Select the parent member.
+3. Under Sort, select Children or Descendants.
+4. Click Sort Ascending or Sort Descending.
+Children vs. Descendants:
+- Children: Sorts only immediate children.
+- Descendants: Sorts all descendant members.
+Oracle notes that sorting affects the dimension outline, not merely the temporary display.
+
+Reference: Chapter 15, page 7. EPM-INFORMATION-DEVELOPMENT-TEAM-E93973-628A1C2A_copy (1)(1).pdf
+
+7. Moving Members to Another Hierarchy
+
+Oracle provides a simple procedure for changing a member's parent.
+Procedure
+1. Open Edit Member Properties.
+2. Locate the member to move.
+3. Find the Parent Member column.
+4. Enter the new parent member name.
+5. Click Save.
+Changing a parent modifies the dimension hierarchy. Administrators should therefore review the effect on related calculations and reports.
+
+Reference: Chapter 15, page 7. EPM-INFORMATION-DEVELOPMENT-TEAM-E93973-628A1C2A_copy (1)(1).pdf
+
+8. Working with Member Formulas
+
+Definition: Member formulas are calculations defined
+ on dimension members using operators, functions, member names, and numeric constants.
+
+Oracle allows formulas to be edited directly in the grid, in the formula bar, or through the Member Formula dialog.
+Oracle's best practices
+
+- Prefer member formulas on Level 0 members.
+- Avoid formulas on Custom dimensions unless needed for reporting.
+- Avoid formulas on the Movement dimension because of consolidation performance considerations.
+- Prefer Two-Pass calculations on the Account dimension only.
+- Do not add custom formulas under the Total Balance Sheet hierarchy.
+- Avoid Level 0 Dynamic Calc members without formulas.
+- For Hybrid-enabled applications, Oracle recommends the @NONEMPTYTUPLE(); directive.
+- Avoid returning #MISSING from formulas.
+Important: Oracle explains that member formulas can calculate dynamically when a grid is opened. Formula changes can therefore affect application-wide results.
+
+Reference: Chapter 15,
+
+9. Editing Dimension Properties
+
+Oracle allows Service Administrators to edit supported dimension properties, including data storage, security, and display options.
+
+The exact editable properties depend on the dimension.
+Important Account member properties
+Property	Valid values or purpose
+Account Type	Expense, Revenue, Asset, Liability, Equity, Saved Assumption
+Time Balance	Flow or Balance
+Data Type	Currency, Non Currency, Percentage, Smart List, Date, Text, Unspecified
+Exchange Rate Type	No Rate, Average, Ending, Historical, and supported overrides
+Consolidation Operator	Addition, Subtraction, Multiplication, Division, Percent, Ignore, Never
+Data Storage	Dynamic Calc, Never Share, Label Only, Shared, depending on member type
+Two Pass Calculation	Yes or No
+Alias Table	Alternative member display names
+
+These properties affect how member data is calculated, stored, and displayed.
+
+Reference: Chapter 15, pages 11–13. EPM-INFORMATION-DEVELOPMENT-TEAM-E93973-628A1C2A_copy (1)(1).pdf
+
+10. Saving Changes and Refreshing the Database
+After editing member properties, Oracle provides the following actions:
+1. Click Save to save the changes.
+2. Click Refresh Database to apply saved metadata changes to the application database.
+Oracle also provides Refresh within the editor to discard unsaved changes and restore the last saved state.
+
+Important distinction:
+Action	Purpose
+Save	Saves metadata edits
+Refresh	Discards changes made since the last save
+Refresh Database	Applies saved changes across the application database
+
+Reference: Chapter 15, page 20. EPM-INFORMATION-DEVELOPMENT-TEAM-E93973-628A1C2A_copy (1)(1).pdf
+
+11. Deleting Members
+
+Oracle warns that deleting members can result in data loss when the application is refreshed.
+
+Deleting Entity members also removes associated approval units and their data.
+Procedure
+1. Open Edit Member Properties.
+2. Select the member.
+3. Click Actions → Delete Member.
+4. Confirm the deletion.
+5. Update and validate affected business rules and reports.
+Before deleting a member, Oracle recommends using Show Usage to identify dependencies.
+
+Important: Deleting a base member also deletes its shared members.
+
+Reference: Chapter 15, pages 20–21. EPM-INFORMATION-DEVELOPMENT-TEAM-E93973-628A1C2A_copy (1)(1).pdf
+
+12. Shared Members
+]
+Definition: Shared members allow an existing base member to be represented in alternate hierarchy structures.
+
+Oracle specifies that:
+- A base member must exist before its shared members are created.
+- Shared members are supported for Entity, Account, and user-defined Custom dimensions.
+- Shared members must have unique parent members.
+- Shared members cannot have their own member formulas or custom attributes.
+- Renaming a base member also renames its shared members.
+- Shared members cannot be moved to another parent.
+Reference: Chapter 15, pages
+
+
+
+
+Oracle FCCS – All Predefined Dimensions Explained with Real-Time Examples
+In Oracle FCCS (Financial Consolidation and Close), predefined dimensions are dimensions provided by Oracle when an FCCS application is created.
+
+They help organize financial data, perform calculations, translate currencies, consolidate subsidiaries, eliminate intercompany transactions, and generate financial statements.
+
+We will understand each dimension using our ABC Global Group implementation project.
+1. List of predefined dimensions in FCCS
+FCCS has 11 core predefined dimensions, plus Multi-GAAP when that feature is enabled.
+#	Dimension	Purpose	Example
+1	Account	What financial account?	Cash, Revenue
+2	Entity	Which company?	ABC India
+3	Scenario	What type of data?	Actual, Budget
+4	Year	Which financial year?	FY2026
+5	Period	Which financial period?	January
+6	View	How is data viewed?	Periodic, YTD
+7	Currency	Which currency?	INR, USD
+8	Consolidation	Which consolidation stage?	Entity Input, Contribution
+9	Data Source	Where did the data originate?	Data Input, Journals
+10	Movement	How did the balance change?	Opening Balance, Movements
+11	Intercompany	Which related company?	ICP_ABC_USA
+12	Multi-GAAP	Which accounting basis?	IFRS, Local GAAP
+
+Important: Oracle supplies the dimensions and their required structures. You configure permitted members and properties within those dimensions. Some dimensions are primarily system-controlled, and optional dimensions or features depend on application configuration.
+
+2. Account Dimension
+Purpose: The Account dimension identifies what financial information is being recorded.
+
+For example, ABC India has the following financial balances:
+Account	Amount
+Cash	₹5,00,000
+Accounts Receivable	₹3,00,000
+Revenue	₹10,00,000
+Salary Expense	₹2,00,000
+
+These accounts belong to the Account dimension.
+Example account hierarchy
+Total Accounts
+
+Balance Sheet
+Assets
+
+↳ Cash
+
+↳ Accounts Receivable
+
+Liabilities
+
+↳ Accounts Payable
+
+
+
+Income Statement
+Revenue
+
+↳ Sales Revenue
+
+Expenses
+
+↳ Salary Expense
+
+↳ Rent Expense
+
+
+
+
+Illustrative hierarchy, not the exact seeded FCCS Account hierarchy.
+Interview scenario: A Revenue account is configured with the Asset account type. What would you do?
+
+Answer: I would review and correct the account metadata, assess the impact on translation and calculations, rerun affected processes, and reconcile the financial results.
+
+3. Entity Dimension
+Purpose: The Entity dimension represents the companies or organizational units whose financial information is consolidated.
+
+Our ABC Global Group has three subsidiaries.
+ABC Global
+
+
+ABC India
+
+INR
+
+
+ABC USA
+
+USD
+
+
+ABC UK
+
+GBP
+
+
+
+
+Entity	Parent	Currency
+ABC India	ABC Global	INR
+ABC USA	ABC Global	USD
+ABC UK	ABC Global	GBP
+
+Interview scenario: The client acquires ABC Singapore. What changes are needed?
+
+Answer: Create the new Entity member, configure its parent and currency, review ownership and intercompany properties, update data mappings and security, and validate consolidation.
+
+4. Scenario Dimension
+Purpose: The Scenario dimension identifies the type of financial data.
+
+Examples include Actual, Budget, and Forecast, depending on the application's supported configuration.
+Scenario	ABC India revenue
+Actual	₹10,00,000
+Budget	₹12,00,000
+Forecast	₹11,00,000
+
+The company can compare actual performance against planned performance.
+
+For example:
+\[
+\text{Variance} = 10,00,000 - 12,00,000 = -₹2,00,000
+\]
+
+The actual revenue is ₹2 lakh below budget.
+
+Interview scenario: Actual data is loaded into Budget.
+
+Answer: Check the Scenario dimension mapping and integration POV. Correct the mapping and reload the data into the intended scenario.
+
+5. Year Dimension
+Purpose: The Year dimension identifies the financial year associated with the data.
+
+Examples:
+- FY2025
+- FY2026
+- FY2027
+Year	ABC India revenue
+FY2025	₹80 lakh
+FY2026	₹100 lakh
+FY2027	₹120 lakh
+
+The Year dimension supports period-over-period and year-over-year reporting.
+
+Interview scenario: January 2026 data is loaded into FY2025.
+
+Answer: Check the period mapping, year mapping, and integration configuration, then correct and reconcile the load.
+
+6. Period Dimension
+Purpose: The Period dimension identifies the financial period within a year.
+
+Examples:
+- January
+- February
+- March
+- April
+Period	Revenue
+January	₹10 lakh
+February	₹12 lakh
+March	₹15 lakh
+Q1 Total	₹37 lakh
+
+The Period dimension allows monthly, quarterly, and annual financial analysis.
+
+Interview scenario: February data appears in January.
+
+Answer: Verify source period values, period mappings, and the target POV used during the load.
+
+7. View Dimension
+Purpose: The View dimension determines how financial data is displayed across time.
+
+Important View members include:
+- Periodic
+- YTD (Year-to-Date)
+- YTD_Input, where applicable
+Example
+ABC India's revenue:
+Period	Periodic	YTD
+January	₹10 lakh	₹10 lakh
+February	₹12 lakh	₹22 lakh
+March	₹15 lakh	₹37 lakh
+
+
+PeriodicYTD
+
+010203040JanFebMar
+
+
+
+
+
+
+
+
+
+Illustrative revenue values in ₹ lakh
+
+
+
+
+
+Periodic shows the amount for an individual month.
+
+YTD shows the cumulative amount from the beginning of the year.
+
+YTD_Input supports year-to-date input behavior in applicable configurations; it is not simply another reporting total.
+
+Interview scenario: The February revenue should be ₹12 lakh, but a report shows ₹22 lakh.
+
+Answer: Check whether the report uses YTD instead of Periodic.
+
+8. Currency Dimension
+Purpose: The Currency dimension identifies the currency context of financial data.
+
+ABC Group uses three local currencies and reports in USD.
+Entity	Entity currency	Parent currency
+ABC India	INR	USD
+ABC USA	USD	USD
+ABC UK	GBP	USD
+
+Example
+ABC India reports INR 85 lakh revenue.
+
+Assume the applicable average exchange rate is INR 85 per USD.
+\[
+\frac{₹85,00,000}{85}=\$100,000
+\]
+
+FCCS translates the revenue into USD using the configured translation rules.
+
+The Currency dimension also contains system-generated currency-related members such as Entity Currency and Parent Currency.
+
+Interview scenario: ABC India revenue is not translating into USD.
+
+Answer: Verify the entity currency, exchange rates, account translation settings, selected currency intersection, and translation status.
+
+9. Consolidation Dimension
+Purpose: The Consolidation dimension identifies the stage of consolidation processing.
+
+It helps distinguish input balances, adjustments, proportionalization, eliminations, and contribution results.
+
+Important seeded concepts include:
+Member	Purpose
+FCCS_Entity Input	Data loaded or entered at entity level
+FCCS_Entity Consolidation	Consolidation adjustments and processing
+FCCS_Proportion	Ownership-related proportionalization
+FCCS_Elimination	Intercompany elimination results
+FCCS_Contribution	Entity contribution to the parent
+
+Example
+Suppose ABC India reports revenue of $100,000, with no adjustments or eliminations.
+Entity Input
+
+$100,000
+
+
+
+Consolidation processing
+
+No adjustments
+
+
+
+Contribution
+
+$100,000
+
+
+
+Interview scenario: Entity Input shows $100,000, but Contribution shows $90,000.
+
+Answer: Compare the same dimensional intersections and investigate ownership, proportionalization, eliminations, and consolidation adjustments.
+
+10. Data Source Dimension
+Purpose: The Data Source dimension identifies the origin or category of financial data.
+
+For example, financial balances may originate from a data load, journal, or supplemental adjustment.
+Data source	Example
+FCCS_Data Input	Trial balance loaded from ERP
+FCCS_Journal Input	Journal adjustment, where supported
+Supplemental data source	Additional financial adjustments, where configured
+
+Exact member names and available members depend on the application and enabled functionality.
+Example
+ABC USA reports salary expense of $20,000.
+
+An additional approved journal records $2,000.
+Data source	Amount
+Data Input	$20,000
+Journal adjustment	$2,000
+Combined expense	$22,000
+
+Interview scenario: The source trial balance is correct, but the total expense is higher.
+
+Answer: Review the Data Source dimension to identify whether journals or other adjustments explain the difference.
+
+11. Movement Dimension
+Purpose: The Movement dimension tracks changes in financial balances between opening and closing balances.
+
+It is particularly important for balance sheet roll-forwards and cash flow reporting.
+Example: Fixed Assets
+ABC India's fixed assets:
+Movement	Amount
+Opening Balance	₹10,00,000
+Additions	₹3,00,000
+Disposals	−₹1,00,000
+Closing Balance	₹12,00,000
+
+Opening Balance
+₹10 lakh
+
+
+Additions
++₹3 lakh
+
+
+Disposals
+−₹1 lakh
+
+
+
+
+Closing Balance
+₹12 lakh
+
+
+Important seeded Movement members include FCCS_OpeningBalance and FCCS_ClosingBalance. Other movement members may be system-defined or configured for the application's requirements.
+
+Interview scenario: Opening balance is ₹10 lakh and additions are ₹3 lakh, but closing balance shows ₹10 lakh.
+
+Answer: Check whether additions were loaded to the correct Movement member, review account and movement mappings, and verify that the relevant calculations ran successfully.
+
+12. Intercompany Dimension
+Purpose: The Intercompany dimension identifies the other company involved in an internal group transaction.
+Example
+ABC India provides services worth $30,000 to ABC USA.
+Dimension	Value
+Entity	ABC_India
+Account	IC_Receivable
+Intercompany	ICP_ABC_USA
+Amount	$30,000
+
+ABC USA records the corresponding payable:
+Dimension	Value
+Entity	ABC_USA
+Account	IC_Payable
+Intercompany	ICP_ABC_India
+Amount	$30,000
+
+ABC India
+
+Receivable
+$30k
+
+
+ABC USA
+
+Payable
+$30k
+
+
+
+
+Intercompany balances eliminated during group consolidation
+
+
+Interview scenario: Intercompany receivables and payables are present, but elimination is not happening.
+
+Answer: Verify intercompany entity properties, account settings, ICP partner mappings, common-parent relationships, and consolidation processing.
+
+13. Multi-GAAP Dimension (Optional)
+Purpose: The Multi-GAAP dimension supports financial reporting under different accounting bases when the feature is enabled.
+
+For example, ABC Global may require both local accounting and IFRS adjustments.
+Accounting basis	Example treatment
+Local GAAP	Locally reported balance
+IFRS adjustments	Adjustments required for IFRS
+IFRS reporting	Result after applicable adjustments
+
+Example
+Suppose ABC UK's local-GAAP expense is $50,000 and an IFRS adjustment increases expense by $5,000.
+Component	Amount
+Local-GAAP expense	$50,000
+IFRS adjustment	$5,000
+IFRS expense	$55,000
+
+This is a simplified reporting example. Actual Multi-GAAP configuration and member behavior depend on the application.
+
+Interview scenario: The client needs local-GAAP and IFRS financial statements. How would you design the solution?
+
+Answer: I would gather the accounting differences, review Multi-GAAP requirements and feature availability, design the relevant adjustment process, and validate both reporting bases.
+
+14. How all dimensions work together
+Suppose ABC India reports ₹10 lakh of revenue in January 2026.
+
+FCCS stores the amount at an intersection of multiple dimensions.
+FINANCIAL DATA VALUE
+₹10,00,000
+ABC India Revenue – January 2026
+
+
+Account
+
+Revenue
+
+
+Entity
+
+ABC_India
+
+
+Scenario
+
+Actual
+
+
+Year
+
+FY2026
+
+
+Period
+
+Jan
+
+
+View
+
+Periodic
+
+
+Currency
+
+Entity Currency (INR)
+
+
+Consolidation
+
+Entity Input
+
+
+Data Source
+
+Data Input
+
+
+Movement
+
+Applicable movement
+
+
+Intercompany
+
+FCCS_No Intercompany
+
+
+Multi-GAAP
+
+If enabled
+
+
+
+
+Every financial value is identified by a combination of dimension members. This is called a multidimensional data intersection.
+
+For a four-year FCCS consultant interview, you should be able to explain how changing one dimension member can change the meaning of the data.
+
+15. Scenario-based interview practice
+QUESTION 1 OF 5
+
+FCCS Dimensions Quiz
+
+Which dimension identifies the company to which financial data belongs?
+
+A. Account
+
+B. Entity
+
+C. Scenario
+
+D. Movement
+
+ PreviousNext 
+
+Interview-ready summary
+A strong answer for a four-year FCCS consultant is:
+Oracle FCCS provides predefined dimensions such as Account, Entity, Scenario, Year, Period, View, Currency, Consolidation, Data Source, Movement, and Intercompany, with Multi-GAAP available when enabled. These dimensions organize financial data and support translation, consolidation, eliminations, and reporting. Each financial value is stored at a specific intersection of dimension members, and member properties determine how that data is processed.
+
+Most important for practical implementation: Account, Entity, Movement, Consolidation, Currency, Data Source, and Intercompany. Understanding how these seven dimensions interact will help you troubleshoot many real-world FCCS consolidation issues.
